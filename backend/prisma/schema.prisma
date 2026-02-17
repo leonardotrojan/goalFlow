@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  goals Goal[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Goal {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  name String
+  description String
+  startDate DateTime @default(now())
+  totalDays Int
+  completedDays Int @default(0)
+  minutesPerDay Int
+  status GoalStatus @default(GENERATING)
+  checkins CheckIn[]
+  dailyPlans DailyPlan[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+}
+
+model DailyPlan {
+  id String @id @default(uuid())
+  goal Goal @relation(fields: [goalId], references: [id])
+  goalId String
+  dayNumber Int
+  focusText String
+  @@unique([goalId, dayNumber])
+  @@index([goalId])
+}
+
+model CheckIn {
+  id String @id @default(uuid())
+  goal Goal @relation(fields: [goalId], references: [id])
+  goalId String
+  dayNumber Int
+  createdAt DateTime @default(now())
+  @@unique([goalId, dayNumber])
+  @@index([goalId])
+}
+
+enum GoalStatus {
+  GENERATING
+  IN_PROGRESS
+  COMPLETED
+}
