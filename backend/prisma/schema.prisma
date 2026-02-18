@@ -31,7 +31,7 @@ model Goal {
   updatedAt     DateTime    @updatedAt
   checkins      CheckIn[]
   dailyPlans    DailyPlan[]
-  user          User        @relation(fields: [userId], references: [id])
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
