@@ -1,68 +1,42 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { CreateGoalUseCase } from './use-cases/create-goal.usecase';
-import { FindAllGoalsUseCase } from './use-cases/find-all-goals.usecase';
 import { FindGoalByIdUseCase } from './use-cases/find-goal-by-id.usecase';
 import { FindGoalByUserIdUseCase } from './use-cases/find-goal-by-user-id.usecase';
 import { UpdateGoalUseCase } from './use-cases/update-goal.usecase';
 import { DeleteGoalUseCase } from './use-cases/delete-goal.usecase';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import type { AuthUser } from '../auth/types/auth-user.type';
 
 @Controller('goals')
 export class GoalController {
     constructor(
         private createGoalUseCase: CreateGoalUseCase,
-        private findAllGoalsUseCase: FindAllGoalsUseCase,
         private findGoalByIdUseCase: FindGoalByIdUseCase,
         private findGoalByUserIdUseCase: FindGoalByUserIdUseCase,
         private updateGoalUseCase: UpdateGoalUseCase,
         private deleteGoalUseCase: DeleteGoalUseCase
     ) {}
 
+    @UseGuards(JwtAuthGuard)
     @Post()
-    async create(@Body() body: any) {
-        const goal = await this.createGoalUseCase.execute(body)
-
-        return {
-            id: goal.getId(),
-            userId: goal.getUserId(),
-            name: goal.getName(),
-            description: goal.getDescription(),
-            totalDays: goal.getTotalDays(),
-            minutesPerDay: goal.getMinutesPerDay(),
-            status: goal.getStatus(),
-            createdAt: goal.getCreatedAt(),
-        }
-    }
-
-    @Get()
-    async findAll() {
-        const goals = await this.findAllGoalsUseCase.execute()
-
-        return goals.map(goal => ({
-            id: goal.getId(),
-            name: goal.getName(),
-            totalDays: goal.getTotalDays(),
-            completedDays: goal.getCompletedDays(),
-            status: goal.getStatus(),
+    async create(
+        @Body() body: any,
+        @CurrentUser() user: AuthUser
+    ) {
+        return this.createGoalUseCase.execute({
+            ...body,
+            userId: user.userId
         })
-        )
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
-    async findById(@Param('id') id: string) {
-        const goal = await this.findGoalByIdUseCase.execute(id)
-
-        return {
-            id: goal.getId(),
-            name: goal.getName(),
-            description: goal.getDescription(),
-            totalDays: goal.getTotalDays(),
-            status: goal.getStatus(),
-        }
-    }
-
-    @Get("/users/:userId")
-    async findByUserId(@Param("userId") userId: string) {
-        const goals = await this.findGoalByUserIdUseCase.execute(userId)
+    async findMyGoals(
+        @Param('id') userId: AuthUser,
+        @CurrentUser() user: AuthUser
+    ) {
+        const goals = await this.findGoalByUserIdUseCase.execute(user.userId)
 
         return goals.map(goal => ({
             id: goal.getId(),
@@ -74,28 +48,36 @@ export class GoalController {
         }))
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('findOne/:id')
+    async findById(
+        @Param('id') id: string,
+        @CurrentUser() user: AuthUser
+    ) {
+        return this.findGoalByIdUseCase.execute(id, user.userId)
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Patch(":id")
     async update(
         @Param('id') id: string,
-        @Body() body: any
+        @Body() body: any,
+        @CurrentUser() user: AuthUser
     ) {
-        const goal = await this.updateGoalUseCase.execute({
+        return this.updateGoalUseCase.execute({
             id,
+            userId: user.userId,
             name: body.name,
-            description: body.description,
+            description: body.description
         })
-
-        return {
-            id: goal.getId(),
-            name: goal.getName(),
-            description: goal.getDescription(),
-            minutesPerDay: goal.getMinutesPerDay(),
-            status: goal.getStatus(),
-        }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(":id")
-    async delete(@Param("id") id: string) {
+    async delete(
+        @Param("id") id: string,
+        @CurrentUser() user: AuthUser
+    ) {
         await this.deleteGoalUseCase.execute(id)
 
         return {

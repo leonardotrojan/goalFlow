@@ -6,7 +6,6 @@ import { PrismaGoalRepository } from './repository/goal.repository';
 import { CreateGoalUseCase } from './use-cases/create-goal.usecase';
 import { UserRepository } from '../users/repository/user-interface.repository';
 import { PrismaUserRepository } from '../users/repository/user.repository';
-import { FindAllGoalsUseCase } from './use-cases/find-all-goals.usecase';
 import { FindGoalByIdUseCase } from './use-cases/find-goal-by-id.usecase';
 import { FindGoalByUserIdUseCase } from './use-cases/find-goal-by-user-id.usecase';
 import { UpdateGoalUseCase } from './use-cases/update-goal.usecase';
@@ -17,7 +16,6 @@ import { DeleteGoalUseCase } from './use-cases/delete-goal.usecase';
   providers: [
     PrismaService,
     CreateGoalUseCase,
-    FindAllGoalsUseCase,
     FindGoalByIdUseCase,
     FindGoalByUserIdUseCase,
     UpdateGoalUseCase,

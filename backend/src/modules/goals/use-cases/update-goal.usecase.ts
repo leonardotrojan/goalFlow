@@ -4,6 +4,7 @@ import { Goal } from "../domain/goal.entity";
 
 interface UpdateGoalDTO {
     id: string
+    userId: string
     name?: string
     description?: string
 }

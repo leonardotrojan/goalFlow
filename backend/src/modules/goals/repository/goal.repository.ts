@@ -26,26 +26,6 @@ export class PrismaGoalRepository extends GoalRepository {
         })
     }
 
-    async findAllGoals(): Promise<Goal[]> {
-        const goals = await this.prisma.goal.findMany();
-        
-        return goals.map(goal =>
-            new Goal({
-                id: goal.id,
-                userId: goal.userId,
-                name: goal.name,
-                description: goal.description,
-                totalDays: goal.totalDays,
-                minutesPerDay: goal.minutesPerDay,
-                completedDays: goal.completedDays,
-                status: goal.status as GoalStatus,
-                startDate: goal.startDate,
-                createdAt: goal.createdAt,
-                updatedAt: goal.updatedAt,
-            })
-        );
-    }
-
     async findById(id: string): Promise<Goal | null> {
         const goal = await this.prisma.goal.findUnique({
             where: {
@@ -101,7 +81,7 @@ export class PrismaGoalRepository extends GoalRepository {
         )
     }
 
-    async updateGoal(goal: Goal): Promise<void> {
+    async updateGoal(goal: Goal): Promise<Goal> {
         await this.prisma.goal.update({
             where: {
                 id: goal.getId()
@@ -114,6 +94,8 @@ export class PrismaGoalRepository extends GoalRepository {
                 updatedAt: new Date(),
             },
         });
+
+        return goal
     }
 
     async deleteGoal(id: string): Promise<void> {

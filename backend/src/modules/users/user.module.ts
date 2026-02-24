@@ -23,5 +23,6 @@ import { DeleteUserUseCase } from './use-cases/delete-user.usecase';
       useClass: PrismaUserRepository
     }
   ],
+  exports: [UserRepository]
 })
 export class UserModule {}

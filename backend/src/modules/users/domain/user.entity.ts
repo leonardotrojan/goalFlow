@@ -13,19 +13,12 @@ export class User {
         this.createdAt = props.createdAt ?? new Date()
 
         this.validateEmail()
-        this.validatePassword()
     }
 
     private validateEmail() {
         const emailRegex = /\S+@\S+\.\S+/
         if (!emailRegex.test(this.email)) {
             throw new Error('Invalid email')
-        }
-    }
-
-    private validatePassword() {
-        if(this.password.length < 6) {
-            throw new Error('Password must have at least 6 characters')
         }
     }
 
