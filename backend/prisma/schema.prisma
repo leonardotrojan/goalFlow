@@ -62,4 +62,5 @@ enum GoalStatus {
   GENERATING
   IN_PROGRESS
   COMPLETED
+  FAILED
 }

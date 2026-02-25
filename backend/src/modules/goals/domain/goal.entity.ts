@@ -1,7 +1,10 @@
+import { DailyPlan } from "./daily-plan.entity";
+
 export enum GoalStatus {
     GENERATING = 'GENERATING',
     IN_PROGRESS = 'IN_PROGRESS',
-    COMPLETED = 'COMPLETED'
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED'
 }
 
 export class Goal {
@@ -14,6 +17,7 @@ export class Goal {
     private completedDays: number
     private minutesPerDay: number
     private status: GoalStatus
+    private dailyPlans: DailyPlan[]
     private createdAt: Date
     private updatedAt?: Date
 
@@ -27,6 +31,7 @@ export class Goal {
         startDate?: Date
         completedDays?: number
         status?: GoalStatus
+        dailyPlans: DailyPlan[]
         createdAt?: Date
         updatedAt?: Date
     }) {
@@ -40,6 +45,7 @@ export class Goal {
         this.startDate = props.startDate ?? new Date();
         this.completedDays = props.completedDays ?? 0;
         this.status = props.status ?? GoalStatus.GENERATING;
+        this.dailyPlans = props.dailyPlans ?? []
         this.createdAt = props.createdAt ?? new Date();
         this.updatedAt = props.updatedAt;
 
@@ -89,6 +95,26 @@ export class Goal {
         this.description = description
     }
 
+    applyRoadmap(minutesPerDay: number, dailyPlans: DailyPlan[]) {
+        if (this.status !== GoalStatus.GENERATING) {
+            throw new Error("Roadmap can only be applied to generating goals")
+        }
+
+        if (dailyPlans.length !== this.totalDays) {
+            throw new Error("DailyPlans count must match totalDays")
+        }
+
+        this.minutesPerDay = minutesPerDay
+
+        this.dailyPlans = dailyPlans
+
+        this.status = GoalStatus.IN_PROGRESS
+    }
+
+    markAsFailed() {
+        this.status = GoalStatus.FAILED
+    }
+
     getId() { return this.id; }
     getUserId() { return this.userId; }
     getName() { return this.name; }
@@ -97,6 +123,7 @@ export class Goal {
     getCompletedDays() { return this.completedDays; }
     getMinutesPerDay() { return this.minutesPerDay; }
     getStatus() { return this.status; }
+    getDailyPlans() { return this.dailyPlans }
     getStartDate() { return this.startDate; }
     getCreatedAt() { return this.createdAt; }
 }

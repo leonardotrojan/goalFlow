@@ -6,4 +6,6 @@ export abstract class GoalRepository {
     abstract findByUserId(userId: string): Promise<Goal[]>
     abstract updateGoal(goal: Goal): Promise<Goal>
     abstract deleteGoal(id: string): Promise<void>
+    abstract saveRoadmap(goal: Goal): Promise<void>
+    abstract updateStatus(goal: Goal): Promise<void>
 }

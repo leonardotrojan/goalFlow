@@ -1,30 +1,35 @@
-export interface DailyPlanProps {
-    id: string
-    goalId: string
-    dayNumber: number
-    focusText: string
-}
-
 export class DailyPlan {
-    private props: DailyPlanProps
+    private id: string
+    private goalId: string
+    private dayNumber: number
+    private focusText: string
 
-    constructor(props: DailyPlanProps) {
-        this.props = props
+    constructor(props: {
+        id: string
+        goalId: string
+        dayNumber: number
+        focusText: string
+    }) {
+        this.id = props.id
+        this.goalId = props.goalId
+        this.dayNumber = props.dayNumber
+        this.focusText = props.focusText
+
+        this.validate()
     }
 
-    getId() {
-        return this.props.id
+    private validate() {
+        if (this.dayNumber <= 0) {
+            throw new Error('Day number must be greater than 0')
+        }
+
+        if (!this.focusText || this.focusText.length < 3) {
+            throw new Error('FocusText must have at least 3 characters')
+        }
     }
 
-    getGoalId() {
-        return this.props.goalId
-    }
-
-    getDayNumber() {
-        return this.props.dayNumber
-    }
-
-    getFocusText() {
-        return this.props.focusText
-    }
+    getId() { return this.id }
+    getGoalId() { return this.goalId }
+    getDayNumber() { return this.dayNumber }
+    getFocusText() { return this.focusText }
 }
