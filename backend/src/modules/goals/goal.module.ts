@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GoalController } from './goal.controller';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { GoalRepository } from './repository/goal-interface.repository';
 import { PrismaGoalRepository } from './repository/goal.repository';
 import { CreateGoalUseCase } from './use-cases/create-goal.usecase';

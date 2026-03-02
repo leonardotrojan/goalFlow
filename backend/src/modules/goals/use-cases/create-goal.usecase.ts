@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { GoalRepository } from "../repository/goal-interface.repository";
-import { UserRepository } from "src/modules/users/repository/user-interface.repository";
+import { UserRepository } from "../../users/repository/user-interface.repository";
 import { Goal, GoalStatus } from "../domain/goal.entity";
 import { randomUUID } from "crypto";
 import { ApplyRoadmapUseCase } from "./apply-roadmap.usecase";

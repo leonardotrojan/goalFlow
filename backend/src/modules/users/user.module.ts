@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { UserController } from './user.controller';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateUserUseCase } from './use-cases/create-user.usecase';
 import { PrismaUserRepository } from './repository/user.repository';
 import { UserRepository } from './repository/user-interface.repository';

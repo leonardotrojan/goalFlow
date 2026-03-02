@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { GoalRepository } from "./goal-interface.repository";
-import { PrismaService } from "src/database/prisma.service";
+import { PrismaService } from "../../../database/prisma.service";
 import { Goal, GoalStatus } from "../domain/goal.entity";
 import { DailyPlan } from "../domain/daily-plan.entity";
 
