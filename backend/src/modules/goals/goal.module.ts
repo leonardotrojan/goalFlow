@@ -11,11 +11,13 @@ import { FindGoalByUserIdUseCase } from './use-cases/find-goal-by-user-id.usecas
 import { UpdateGoalUseCase } from './use-cases/update-goal.usecase';
 import { DeleteGoalUseCase } from './use-cases/delete-goal.usecase';
 import { RoadmapGeneratorService } from './services/roadmap-generator.service';
+import { ApplyRoadmapUseCase } from './use-cases/apply-roadmap.usecase';
 
 @Module({
   controllers: [GoalController],
   providers: [
     RoadmapGeneratorService,
+    ApplyRoadmapUseCase,
     PrismaService,
     CreateGoalUseCase,
     FindGoalByIdUseCase,

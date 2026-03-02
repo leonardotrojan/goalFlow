@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateUserUseCase } from './use-cases/create-user.usecase';
@@ -8,9 +8,11 @@ import { GetAllUsersUseCase } from './use-cases/get-all-users.usecase';
 import { GetUserByIdUseCase } from './use-cases/get-user-by-id.usecase';
 import { UpdateUserUseCase } from './use-cases/update-user.usecase';
 import { DeleteUserUseCase } from './use-cases/delete-user.usecase';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [UserController],
+  imports: [forwardRef(() => AuthModule)],
   providers: [
     PrismaService,
     CreateUserUseCase,
